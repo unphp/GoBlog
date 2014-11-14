@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/fuxiaohei/GoBlog/app/utils"
+	"github.com/unphp/GoBlog/app/utils"
 	"strings"
 )
 

@@ -1,9 +1,9 @@
 package upgrade
 
 import (
-	"github.com/fuxiaohei/GoBlog/app/cmd"
-	"github.com/fuxiaohei/GoBlog/app/model"
 	"github.com/fuxiaohei/GoInk"
+	"github.com/unphp/GoBlog/app/cmd"
+	"github.com/unphp/GoBlog/app/model"
 )
 
 func init() {

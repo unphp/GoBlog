@@ -1,8 +1,8 @@
 package plugin
 
 import (
-	"github.com/fuxiaohei/GoBlog/app/model"
 	"github.com/fuxiaohei/GoInk"
+	"github.com/unphp/GoBlog/app/model"
 )
 
 type PluginInterface interface {

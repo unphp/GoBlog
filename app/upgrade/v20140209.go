@@ -1,9 +1,9 @@
 package upgrade
 
 import (
-	"github.com/fuxiaohei/GoBlog/app/cmd"
-	"github.com/fuxiaohei/GoBlog/app/model"
 	"github.com/fuxiaohei/GoInk"
+	"github.com/unphp/GoBlog/app/cmd"
+	"github.com/unphp/GoBlog/app/model"
 	"os"
 	"path"
 )
@@ -22,7 +22,7 @@ func upgrade_20140209(app *GoInk.App) bool {
 	model.DefaultNavigators()
 
 	// write message storage
-	model.Storage.Set("messages",[]*model.Message{})
+	model.Storage.Set("messages", []*model.Message{})
 
 	cmd.ExtractBundleBytes()
 	return true
