@@ -1,10 +1,11 @@
 package handler
 
 import (
-	"github.com/fuxiaohei/GoInk"
-	"github.com/unphp/GoBlog/app/model"
 	"path"
 	"strconv"
+
+	"github.com/fuxiaohei/GoInk"
+	"github.com/unphp/GoBlog/app/model"
 )
 
 type jsonContext struct {
@@ -56,6 +57,9 @@ func (tc *themeContext) Layout(layout string) *themeContext {
 }
 
 func (tc *themeContext) Render(tpl string, data map[string]interface{}) {
+	for _, f := range readerDataSet {
+		f(data)
+	}
 	tc.context.Render(path.Join(tc.theme, tpl), data)
 }
 

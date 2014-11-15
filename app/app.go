@@ -1,12 +1,8 @@
 package app
 
 import (
+	"flag"
 	"fmt"
-	"github.com/fuxiaohei/GoInk"
-	"github.com/unphp/GoBlog/app/handler"
-	"github.com/unphp/GoBlog/app/model"
-	"github.com/unphp/GoBlog/app/plugin"
-	"github.com/unphp/GoBlog/app/utils"
 	"net/http"
 	"os"
 	"os/signal"
@@ -15,9 +11,17 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
+
+	"github.com/fuxiaohei/GoInk"
+	"github.com/unphp/GoBlog/app/handler"
+	"github.com/unphp/GoBlog/app/model"
+	"github.com/unphp/GoBlog/app/plugin"
+	"github.com/unphp/GoBlog/app/utils"
 )
 
 var (
+	RootPath string      //根目录
+	ConfData *utils.Conf //配置
 	// APP VERSION, as date version
 	VERSION = 20140228
 	// Global GoInk application
@@ -27,10 +31,32 @@ var (
 )
 
 func init() {
+
+	//服务的根目录（绝对路径）
+	RootPath = utils.RootPath()
+	//默认的配置文件路径
+	defaultConfFile := RootPath + "/conf/conf.ini"
+	fmt.Println(defaultConfFile)
+	configfile := flag.String("conf", defaultConfFile, "The conf of path")
+	flag.Parse()
+	//设置配置文件路径
+	if initconf, err := utils.ParseFile(*configfile); err != nil {
+		panic("conf.ini can't open")
+	} else {
+		ConfData = &utils.Conf{
+			Initconf: initconf,
+		}
+	}
+	handler.RegisterReaderDataSet(func(data map[string]interface{}) {
+		data["static"] = ConfData.Get("app", "static").String()
+		fmt.Println("ssssssssssssss", data["static"])
+	})
+
 	// init application
 	App = GoInk.New()
 
 	// init some settings
+	App.Config().StringOr("app.server", ConfData.Get("app", "server").String())
 	App.Config().StringOr("app.static_dir", "static")
 	App.Config().StringOr("app.log_dir", "tmp/log")
 	os.MkdirAll(App.Get("log_dir"), os.ModePerm)

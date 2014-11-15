@@ -1,12 +1,13 @@
 package handler
 
 import (
-	"github.com/fuxiaohei/GoInk"
-	"github.com/unphp/GoBlog/app/model"
-	"github.com/unphp/GoBlog/app/utils"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/fuxiaohei/GoInk"
+	"github.com/unphp/GoBlog/app/model"
+	"github.com/unphp/GoBlog/app/utils"
 )
 
 func Login(context *GoInk.Context) {
