@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/url"
 	"strconv"
 	"strings"
@@ -63,14 +64,19 @@ func TagArticles(ctx *GoInk.Context) {
 	page, _ := strconv.Atoi(ctx.Param("page"))
 	tag, _ := url.QueryUnescape(ctx.Param("tag"))
 	size := getArticleListSize()
-	articles, pager := model.GetTaggedArticleList(tag, page, getArticleListSize())
+	articles, pager, total := model.GetTaggedArticleList(tag, page, getArticleListSize())
 	// fix dotted tag
 	if len(articles) < 1 && strings.Contains(tag, "-") {
-		articles, pager = model.GetTaggedArticleList(strings.Replace(tag, "-", ".", -1), page, size)
+		articles, pager, total = model.GetTaggedArticleList(strings.Replace(tag, "-", ".", -1), page, size)
 	}
+	fmt.Println(total)
 	Theme(ctx).Layout("home").Render("index", map[string]interface{}{
 		"Articles":    articles,
 		"Pager":       pager,
+		"Total":       total,
+		"PageSize":    size,
+		"Page":        page,
+		"PageUrl":     "/tag/" + tag + "/p/",
 		"SidebarHtml": SidebarHtml(ctx),
 		"Tag":         tag,
 		"Title":       tag,
@@ -88,6 +94,7 @@ func Home(context *GoInk.Context) {
 		"Total":       total,
 		"PageSize":    pageSize,
 		"Page":        page,
+		"PageUrl":     "/p/",
 		"SidebarHtml": SidebarHtml(context),
 	}
 	if page > 1 {

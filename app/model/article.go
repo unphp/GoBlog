@@ -68,18 +68,19 @@ func GetPopularArticleList(size int) []*Content {
 
 // GetTaggedArticleList returns tagged articles list.
 // These articles contains same one tag.
-func GetTaggedArticleList(tag string, page, size int) ([]*Content, *utils.Pager) {
+func GetTaggedArticleList(tag string, page, size int) ([]*Content, *utils.Pager, int) {
 	index := contentsIndex["t-"+tag]
-	pager := utils.NewPager(page, size, len(index))
+	count := len(index)
+	pager := utils.NewPager(page, size, count)
 	articles := make([]*Content, 0)
-	if len(index) < 1 {
-		return articles, pager
+	if count < 1 {
+		return articles, pager, count
 	}
 	if page > pager.Pages {
-		return articles, pager
+		return articles, pager, count
 	}
 	for i := pager.Begin; i <= pager.End; i++ {
 		articles = append(articles, GetContentById(index[i-1]))
 	}
-	return articles, pager
+	return articles, pager, count
 }

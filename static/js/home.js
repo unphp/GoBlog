@@ -174,7 +174,7 @@ function TotogooList() {
         }
         return this.pageTemplate;
     };
-    this.showPage = function(page,total,size) {
+    this.showPage = function(pageUrl,page,total,size) {
 		if(page<1){
 			page = 1;
 		}
@@ -183,7 +183,6 @@ function TotogooList() {
 			size:size
 		}
         Handlebars.registerHelper("showPage", function(row, options) {
-			var pageUrl = '/p/';
             var out = [];
             if (row.count < row.size) {
                 return "";

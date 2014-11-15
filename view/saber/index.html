@@ -25,6 +25,6 @@
 
 <script type="text/javascript">
 $.regTotogooInitFunc().push(function() {
-	$("#article-pager").html($.totogooList().showPage({{.Page}},{{.Total}},{{.PageSize}}));
+	$("#article-pager").html($.totogooList().showPage('{{.PageUrl}}',{{.Page}},{{.Total}},{{.PageSize}}));
 });
 </script>

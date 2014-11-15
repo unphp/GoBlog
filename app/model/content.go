@@ -98,9 +98,13 @@ func (cnt *Content) Content() string {
 // Summary text means the part before page-break <!--more-->.
 // It can be go-markdown rendered.
 func (cnt *Content) Summary() string {
-	text := strings.Split(cnt.Text, "<!--more-->")[0]
+	textArr := strings.Split(cnt.Text, "<!--more-->")
+	text := textArr[0]
+	if len(textArr) > 1 {
+		text = text + "......"
+	}
 	if GetSetting("enable_go_markdown") == "true" {
-		return utils.Markdown2Html(text)
+		text = utils.Markdown2Html(text)
 	}
 	return text
 }
