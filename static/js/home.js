@@ -3,6 +3,13 @@ $(document).ready(function () {
     topButton();
     renderMarkdown();
     initComment();
+	var initFuncList = $.regTotogooInitFunc();
+    if (initFuncList !== undefined) {
+        for (var k in initFuncList) {
+            var func = initFuncList[k];
+            func();
+        }
+    }
 });
 
 function fixHeader() {
@@ -126,4 +133,114 @@ function initComment() {
         $(this).hide();
         return false;
     });
+}
+
+$.extend({
+    TotogooObjMap: {},
+});
+
+$.extend({
+    regTotogooInitFunc: function() {
+        if ($.TotogooObjMap["totogooInitFunc"] === undefined) {
+            $.TotogooObjMap["totogooInitFunc"] = new Array();
+        }
+        return $.TotogooObjMap["totogooInitFunc"];
+    }
+});
+
+$.extend({
+    totogooList: function() {
+        if ($.TotogooObjMap["totogooList"] === undefined) {
+            var domain = location.protocol + "//" + location.hostname;
+            $.TotogooObjMap["totogooList"] = new TotogooList();
+        }
+        return $.TotogooObjMap["totogooList"];
+    }
+});
+
+function TotogooList() {
+	this.pageTemplate = null;
+    this.getPageTemplate = function() {
+        if (null === this.pageTemplate) {
+            var text = [];
+            text.push('<ul class="pagination">');
+            text.push('{{#showPage .}}');
+            text.push('<li class="{{status}}">');
+            text.push('<a href="{{url}}{{page}}">{{{text}}}</a>');
+            text.push('</li>');
+            text.push('{{/showPage}} ');
+            text.push('<ul>');
+            this.pageTemplate = text.join("");
+        }
+        return this.pageTemplate;
+    };
+    this.showPage = function(page,total,size) {
+		if(page<1){
+			page = 1;
+		}
+		var data = {
+			count:total,
+			size:size
+		}
+        Handlebars.registerHelper("showPage", function(row, options) {
+			var pageUrl = '/p/';
+            var out = [];
+            if (row.count < row.size) {
+                return "";
+            }
+            var pages = Math.ceil(parseInt(row.count) / parseInt(row.size));
+            var pageSize = 6;
+            var start, end = 0;
+            if (pages < pageSize) {
+                start = 1;
+                end = pages;
+            } else {
+                start = (page - 3);
+                end = page + 3;
+                if ((page - 3) <= 0) {
+                    start = 1;
+                    end = pageSize + 1;
+                }
+                if ((page + 3) > pages) {
+                    start = pages - pageSize;
+                    end = pages;
+                }
+            }
+            var firstPage = {
+                status: "",
+                url: pageUrl,
+                page: 1,
+                text: "<span>&laquo;</span>"
+            };
+            if (page === 1) {
+                firstPage.status = "disabled";
+            }
+            out.push(options.fn(firstPage));
+            for (var i = start; i <= end; i++) {
+                var option = {
+                    status: "",
+                    url: pageUrl,
+                    page: i,
+                    text: i
+                };
+                if (parseInt(page) === i) {
+                    option.status = "active";
+                }
+                out.push(options.fn(option));
+            }
+            var lastPage = {
+                status: "",
+                url: pageUrl,
+                page: pages,
+                text: "<span>&raquo;</span>"
+            };
+            if (page === pages) {
+                lastPage.status = "disabled";
+            }
+            out.push(options.fn(lastPage));
+            return out.join("");
+        });
+		var pateTemplate = Handlebars.compile(this.getPageTemplate());
+		return pateTemplate(data);
+    };
 }

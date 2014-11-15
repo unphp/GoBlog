@@ -80,10 +80,14 @@ func TagArticles(ctx *GoInk.Context) {
 func Home(context *GoInk.Context) {
 	context.Layout("home")
 	page, _ := strconv.Atoi(context.Param("page"))
-	articles, pager := model.GetPublishArticleList(page, getArticleListSize())
+	pageSize := getArticleListSize()
+	articles, pager, total := model.GetPublishArticleList(page, pageSize)
 	data := map[string]interface{}{
 		"Articles":    articles,
 		"Pager":       pager,
+		"Total":       total,
+		"PageSize":    pageSize,
+		"Page":        page,
 		"SidebarHtml": SidebarHtml(context),
 	}
 	if page > 1 {

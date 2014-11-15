@@ -22,3 +22,9 @@
     </div>
 </div>
 {{Html .SidebarHtml}}
+
+<script type="text/javascript">
+$.regTotogooInitFunc().push(function() {
+	$("#article-pager").html($.totogooList().showPage({{.Page}},{{.Total}},{{.PageSize}}));
+});
+</script>

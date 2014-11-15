@@ -1,17 +1,18 @@
 package handler
 
 import (
+	"strings"
+	"time"
+
 	"github.com/fuxiaohei/GoInk"
 	"github.com/unphp/GoBlog/app/model"
 	"github.com/unphp/GoBlog/app/utils"
-	"strings"
-	"time"
 )
 
 func SiteMap(ctx *GoInk.Context) {
 	baseUrl := model.GetSetting("site_url")
 	println(baseUrl)
-	article, _ := model.GetPublishArticleList(1, 50)
+	article, _, _ := model.GetPublishArticleList(1, 50)
 	navigators := model.GetNavigators()
 	now := time.Unix(utils.Now(), 0).Format(time.RFC3339)
 
@@ -55,7 +56,7 @@ func SiteMap(ctx *GoInk.Context) {
 
 func Rss(ctx *GoInk.Context) {
 	baseUrl := model.GetSetting("site_url")
-	article, _ := model.GetPublishArticleList(1, 20)
+	article, _, _ := model.GetPublishArticleList(1, 20)
 	author := model.GetUsersByRole("ADMIN")[0]
 
 	articleMap := make([]map[string]string, len(article))
