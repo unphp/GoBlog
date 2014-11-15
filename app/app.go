@@ -77,6 +77,9 @@ func init() {
 		if url == "favicon.ico" {
 			url = path.Join(static, url)
 		}
+		if url == "robots.txt" {
+			url = path.Join(static, url)
+		}
 		if !strings.HasPrefix(url, static) {
 			return
 		}
